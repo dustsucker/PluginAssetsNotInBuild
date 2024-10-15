@@ -1,0 +1,9 @@
+services:
+  app:
+    image: php:8.3-alpine
+    volumes:
+      - .:/usr/src/myapp
+    ports:
+      - "8000:8000"
+    working_dir: /usr/src/myapp
+    command: [ "php", "-S", "0.0.0.0:8000", "kirby/router.php" ]

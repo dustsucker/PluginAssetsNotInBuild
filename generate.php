@@ -15,7 +15,7 @@ $customRoutes = [
 ];
 
 $kirby = kirby();
-$staticSiteGenerator = new D4L\StaticSiteGenerator($kirby);
+$staticSiteGenerator = new JR\StaticSiteGenerator($kirby);
 $staticSiteGenerator->setCustomRoutes($customRoutes);
 /*removed because addes unnessecary complexity*/
 /*$staticSiteGenerator->setIgnoreUntranslatedPages(true);*/

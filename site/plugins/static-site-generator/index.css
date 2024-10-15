@@ -1,17 +1,17 @@
-.d4l-static-site-generator__container {
+.jr-static-site-generator__container {
   background: #fff;
   padding: 1.5rem;
 }
 
-.d4l-static-site-generator__help {
+.jr-static-site-generator__help {
   margin-bottom: 1rem;
 }
 
-.d4l-static-site-generator .d4l-static-site-generator__status {
+.jr-static-site-generator .jr-static-site-generator__status {
   padding: 1.5rem;
 }
 
-.d4l-static-site-generator__message {
+.jr-static-site-generator__message {
   white-space: pre;
   overflow-x: auto;
 }

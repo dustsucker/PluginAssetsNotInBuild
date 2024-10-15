@@ -1,8 +1,8 @@
-# Kirby 3+ - Static Site Generator
+# Kirby 3 / 4 - Static Site Generator
 
-![License](https://img.shields.io/github/license/mashape/apistatus.svg) ![Kirby Version](https://img.shields.io/badge/Kirby-3%2B-black.svg)
+![License](https://img.shields.io/github/license/mashape/apistatus.svg) ![Kirby 3](https://img.shields.io/badge/Kirby-3-black.svg) ![Kirby 4](https://img.shields.io/badge/Kirby-4-black.svg)
 
-With this plugin you can create a directory with assets, media and static html files generated from your pages. You can simply upload the generated files to any CDN and everything (with small exceptions, see below) will still work. The result is an even faster site with less potential vulnerabilities.
+With this plugin you can create a directory with assets, media and static html files generated from your pages. You can simply upload the generated files to any CDN and everything (with small exceptions, see below) will still work. The result is an even faster site containing only static files (no PHP).
 
 ## Example
 
@@ -14,7 +14,7 @@ With this plugin you can create a directory with assets, media and static html f
 
 ## How to install the plugin
 
-If you use composer, you can install the plugin with: `composer require d4l/kirby-static-site-generator`
+If you use composer, you can install the plugin with: `composer require jreisdorf/kirby-static-site-generator`
 
 Alternatively, create a `static-site-generator` folder in `site/plugins`, download this repository and extract its contents into the new folder.
 
@@ -39,24 +39,25 @@ Alternatively, create a `static-site-generator` folder in `site/plugins`, downlo
 - Kirby paginations (only manual paginations via custom routes)
 - Directly opening the html files in the browser with the file protocol (absolute base url `/`)
 - Compatibility with other plugins that work with the `file::version` and `file::url` components
+- Compatibility with `esc` when used for internal URLs
 
 ## How to use it
 
 ### 1) Directly (e.g. from a kirby hook)
 
 ```php
-$staticSiteGenerator = new D4L\StaticSiteGenerator($kirby, $pathsToCopy = null, $pages = null);
+$staticSiteGenerator = new JR\StaticSiteGenerator($kirby, $pathsToCopy = null, $pages = null);
 $fileList = $staticSiteGenerator->generate($outputFolder = './static', $baseUrl = '/', $preserve = []);
 ```
 
 - `$pathsToCopy`: if not given, `$kirby->roots()->assets()` is used; set to `[]` to skip copying other files than media
 - `$pages`: if not given, all pages are rendered
 - use `$preserve` to preserve individual files or folders in your output folder, e.g. if you want to preserve a `README.md` in your output folder, set `$preserve`to `['README.md']`; any files or folders directly in the root level and starting with `.` are always preserved (e.g. `.git`)
-- The `D4L\StaticSiteGenerator` class offers a couple of public methods that allow to make further configuration changes.
+- The `JR\StaticSiteGenerator` class offers a couple of public methods that allow to make further configuration changes.
 
 ### 2) By triggering an endpoint
 
-To use this, adapt config option `d4l.static_site_generator.endpoint` to your needs (should be a string)
+To use this, adapt config option `jr.static_site_generator.endpoint` to your needs (should be a string)
 
 ### 3) By using a `static-site-generator` field
 
@@ -73,25 +74,25 @@ fields:
 
 ```php
 return [
-    'd4l' => [
-      'static_site_generator' => [
-        'endpoint' => null, # set to any string like 'generate-static-site' to use the built-in endpoint (necessary when using the blueprint field)
-        'output_folder' => './static', # you can specify an absolute or relative path
-        'preserve' => [], # preserve individual files / folders in the root level of the output folder (anything starting with "." is always preserved)
-        'base_url' => '/', # if the static site is not mounted to the root folder of your domain, change accordingly here
-        'skip_media' => false, # set to true to skip copying media files, e.g. when they are already on a CDN; combinable with 'preserve' => ['media']
-        'skip_templates' => [], # ignore pages with given templates (home is always rendered)
-        'custom_routes' => [], # see below for more information on custom routes
-        'custom_filters' => [], # see below for more information on custom filters
-        'ignore_untranslated_pages' => false, # set to true to ignore pages without an own language
-        'index_file_name' => 'index.html' # you can change the directory index file name, e.g. to 'index.json' when generating an API
-      ]
+  'jr' => [
+    'static_site_generator' => [
+      'endpoint' => null, # set to any string like 'generate-static-site' to use the built-in endpoint (necessary when using the blueprint field)
+      'output_folder' => './static', # you can specify an absolute or relative path
+      'preserve' => [], # preserve individual files / folders in the root level of the output folder (anything starting with "." is always preserved)
+      'base_url' => '/', # if the static site is not mounted to the root folder of your domain, change accordingly here
+      'skip_media' => false, # set to true to skip copying media files, e.g. when they are already on a CDN; combinable with 'preserve' => ['media']
+      'skip_templates' => [], # ignore pages with given templates (home is always rendered)
+      'custom_routes' => [], # see below for more information on custom routes
+      'custom_filters' => [], # see below for more information on custom filters
+      'ignore_untranslated_pages' => false, # set to true to ignore pages without an own language
+      'index_file_name' => 'index.html' # you can change the directory index file name, e.g. to 'index.json' when generating an API
     ]
+  ]
 ];
 ```
 
 All of these options are only relevant if you use implementation options 2) or 3).
-When directly using the `D4L\StaticSiteGenerator` class, no config options are required.
+When directly using the `JR\StaticSiteGenerator` class, no config options are required.
 In that case, options like `skip_media` can be achieved by calling `$staticSiteGenerator->skipMedia(true)`.
 
 ## Field options
@@ -162,7 +163,7 @@ $staticSiteGenerator->setCustomRoutes($customRoutes);
 #### 2) Via configuration, when using the endpoint or `static-site-generator` field
 
 ```php
-'d4l.static_site_generator.custom_routes' => $customRoutes
+'jr.static_site_generator.custom_routes' => $customRoutes
 ```
 
 ## Custom filters
@@ -171,7 +172,7 @@ When using the endpoint or `static-site-generator` field, this plugin will by de
 You can filter the pages to be rendered by providing an array of custom filters in config option `custom_filters`.
 
 ```php
-'d4l.static_site_generator.custom_filters' => $customFilters
+'jr.static_site_generator.custom_filters' => $customFilters
 ```
 
 Each element of this array must be an array of arguments accepted by [`$pages->filterBy()` method](https://getkirby.com/docs/cookbook/content/filtering).
@@ -198,10 +199,6 @@ Be careful when specifying the output folder, as the given path (except files st
 ## Contribute
 
 Feedback and contributions are welcome!
-
-For commit messages we're following the [gitmoji](https://gitmoji.dev/) guide :smiley:
-Below you can find an example commit message for fixing a bug:
-:bug: fix copying of individual files
 
 Please post all bug reports in our issue tracker.
 We have prepared a template which will make it easier to describe the bug.

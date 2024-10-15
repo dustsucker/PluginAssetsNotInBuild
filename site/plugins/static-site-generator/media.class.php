@@ -1,6 +1,6 @@
 <?php
 
-namespace D4L;
+namespace JR;
 
 use Kirby\Cms\App as Kirby;
 
@@ -8,11 +8,11 @@ $versionFn = kirby()->component('file::version');
 $urlFn = kirby()->component('file::url');
 
 
-Kirby::plugin('d4l/static-site-generator-media', [
+Kirby::plugin('jr/static-site-generator-media', [
   'components' => [
     'file::version' => function (Kirby $kirby, $file, array $options = []) use ($versionFn) {
       $version = $versionFn($kirby, $file, $options);
-      if ($mediaPlugin = $kirby->option('d4l.static_site_generator.media_plugin', null)) {
+      if ($mediaPlugin = $kirby->option('static_site_generator.media_plugin', null)) {
         $version = Kirby::plugin($mediaPlugin)->extends()['components']['file::version']($kirby, $file, $options);
       }
 
@@ -25,7 +25,7 @@ Kirby::plugin('d4l/static-site-generator-media', [
       }
 
       $url = $version->url();
-      if ($urlTransform = $kirby->option('d4l.static_site_generator.media_url_transform', null)) {
+      if ($urlTransform = $kirby->option('static_site_generator.media_url_transform', null)) {
         $url = $urlTransform($url, $kirby);
       }
 
@@ -34,7 +34,7 @@ Kirby::plugin('d4l/static-site-generator-media', [
     },
     'file::url' => function (Kirby $kirby, $file, array $options = []) use ($urlFn) {
       $url = $urlFn($kirby, $file, $options);
-      $mediaPlugin = $kirby->option('d4l.static_site_generator.media_plugin', null);
+      $mediaPlugin = $kirby->option('static_site_generator.media_plugin', null);
       if ($mediaPlugin) {
         $url = Kirby::plugin($mediaPlugin)->extends()['components']['file::url']($kirby, $file, $options);
       }
@@ -43,7 +43,7 @@ Kirby::plugin('d4l/static-site-generator-media', [
         return $url;
       }
 
-      if ($urlTransform = $kirby->option('d4l.static_site_generator.media_url_transform', null)) {
+      if ($urlTransform = $kirby->option('static_site_generator.media_url_transform', null)) {
         $url = $urlTransform($url, $kirby);
       }
 

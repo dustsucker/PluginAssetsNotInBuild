@@ -1,6 +1,6 @@
 <?php
 
-namespace D4L;
+namespace JR;
 
 use Kirby\Cms\App as Kirby;
 
@@ -8,10 +8,10 @@ require_once __DIR__ . '/media.class.php';
 require_once __DIR__ . '/class.php';
 
 
-Kirby::plugin('d4l/static-site-generator', [
+Kirby::plugin('jr/static-site-generator', [
   'api' => [
     'routes' => function ($kirby) {
-      $endpoint = $kirby->option('d4l.static_site_generator.endpoint');
+      $endpoint = $kirby->option('jr.static_site_generator.endpoint');
       if (!$endpoint) {
         return [];
       }
@@ -20,15 +20,15 @@ Kirby::plugin('d4l/static-site-generator', [
         [
           'pattern' => $endpoint,
           'action' => function () use ($kirby) {
-            $outputFolder = $kirby->option('d4l.static_site_generator.output_folder', './static');
-            $baseUrl = $kirby->option('d4l.static_site_generator.base_url', '/');
-            $preserve = $kirby->option('d4l.static_site_generator.preserve', []);
-            $skipMedia = $kirby->option('d4l.static_site_generator.skip_media', false);
-            $skipTemplates = array_diff($kirby->option('d4l.static_site_generator.skip_templates', []), ['home']);
-            $customRoutes = $kirby->option('d4l.static_site_generator.custom_routes', []);
-            $customFilters = $kirby->option('d4l.static_site_generator.custom_filters', []);
-            $ignoreUntranslatedPages = $kirby->option('d4l.static_site_generator.ignore_untranslated_pages', false);
-            $indexFileName = $kirby->option('d4l.static_site_generator.index_file_name', 'index.html');
+            $outputFolder = $kirby->option('jr.static_site_generator.output_folder', './static');
+            $baseUrl = $kirby->option('jr.static_site_generator.base_url', '/');
+            $preserve = $kirby->option('jr.static_site_generator.preserve', []);
+            $skipMedia = $kirby->option('jr.static_site_generator.skip_media', false);
+            $skipTemplates = array_diff($kirby->option('jr.static_site_generator.skip_templates', []), ['home']);
+            $customRoutes = $kirby->option('jr.static_site_generator.custom_routes', []);
+            $customFilters = $kirby->option('jr.static_site_generator.custom_filters', []);
+            $ignoreUntranslatedPages = $kirby->option('jr.static_site_generator.ignore_untranslated_pages', false);
+            $indexFileName = $kirby->option('jr.static_site_generator.index_file_name', 'index.html');
             if (!empty($skipTemplates)) {
               array_push($customFilters, ['intendedTemplate', 'not in', $skipTemplates]);
             }
@@ -56,7 +56,7 @@ Kirby::plugin('d4l/static-site-generator', [
     'staticSiteGenerator' => [
       'props' => [
         'endpoint' => function () {
-          return $this->kirby()->option('d4l.static_site_generator.endpoint');
+          return $this->kirby()->option('jr.static_site_generator.endpoint');
         }
       ]
     ]
